@@ -1,6 +1,57 @@
 const catchAsync = require("../utils/catchAsync");
 const ErrorObject = require("../utils/error");
 const QueryMethod = require("../utils/query");
+const jwt = require("jsonwebtoken");
+const bcrypt = require("bcryptjs");
+const crypto = require("crypto");
+const User = require("../models/User");
+const CatchAsync = require("../utils/catch-async");
+const ErrorObject = require("../utils/error");
+const sendEmail = require("../utils/email");
+
+const { JWT_COOKIE_EXPIRES_IN, JWT_EXPIRES_IN, JWT_SECRET, NODE_ENV } =
+  process.env;
+
+const signToken = (id) => {
+  return jwt.sign({ id }, JWT_SECRET, {
+    expiresIn: JWT_EXPIRES_IN,
+  });
+};
+
+const createAndSendToken = CatchAsync(async (user, statusCode, res) => {
+  const token = await signToken(user._id);
+  const cookieOptions = {
+    expires: new Date(Date.now() + JWT_COOKIE_EXPIRES_IN * 24 * 60 * 60 * 1000),
+    httpOnly: true,
+  };
+  if (NODE_ENV === "production") cookieOptions.secure = true;
+  res.cookie("jwt", token, cookieOptions);
+
+  user.password = undefined;
+  res.status(statusCode).json({
+    status: "success",
+    token,
+    data: {
+      user,
+    },
+  });
+});
+
+exports.signUp = (Model) =>
+  CatchAsync(async (req, res, next) => {
+    const { email, fullName, password, passwordConfirm, address, phoneNumber } =
+      req.body;
+    const user = await Model.create({
+      email,
+      fullName,
+      password,
+      passwordConfirm,
+      address,
+      phoneNumber,
+    });
+
+    createAndSendToken(user, 201, res);
+  });
 
 exports.deleteOne = (Model) =>
   catchAsync(async (req, res, next) => {
@@ -36,7 +87,7 @@ exports.updateOne = (Model) =>
   });
 
 exports.createOne = (Model) =>
-  catchAsync(async (req, res) => {
+  catchAsync(async (req, res, next) => {
     const doc = await Model.create(req.body);
 
     res.status(201).json({
