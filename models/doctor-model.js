@@ -9,6 +9,7 @@ const doctor = {
   },
   available: {
     type: Boolean,
+    default: false,
   },
   setAvailableTime: {
     type: String,
@@ -19,6 +20,14 @@ const doctor = {
   },
   certification: {
     type: String,
+  },
+  accessable: {
+    type: String,
+    enum: ["basic", "standard", "premium"],
+  },
+  attendedTo: {
+    type: Number,
+    default: 0,
   },
 };
 
