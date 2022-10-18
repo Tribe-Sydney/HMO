@@ -58,6 +58,9 @@ const User = {
     select: false,
   },
   timeStamp: true,
+  passwordResetToken: String,
+  passwordChangedAt: Date,
+  passwordTokenExpires: Date,
 };
 
 module.exports = User;
