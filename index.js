@@ -2,6 +2,7 @@ const express = require("express");
 const morgan = require("morgan");
 const fs = require("fs");
 const doctorRoutes = require("./routes/doctor-routes");
+const patientRoutes = require("./routes/patient-routes");
 const ErrorHandler = require("./controllers/error-controllers");
 const ErrorObject = require("./utils/error");
 const { PORT } = process.env;
@@ -23,6 +24,7 @@ app.use(morgan("combined", { stream: accessLogStream }));
 
 // Routes
 app.use("/api/v1/doctors", doctorRoutes);
+app.use("/api/v1/patients", patientRoutes);
 
 app.all("*", (req, res, next) => {
   const err = new ErrorObject(
