@@ -9,6 +9,7 @@ const {
   patientForgotPassword,
   resetPatientPassword,
   updatePatientPassword,
+  protectPatient,
 } = require("../controllers/patient-controllers");
 
 const router = express.Router();
@@ -23,8 +24,8 @@ router.route("/:id").get(getPatient).patch(updatePatient).delete(deletePatient);
 
 router.post("/forgot-password", patientForgotPassword);
 
-router.patch("reset-password", resetPatientPassword);
+router.patch("/reset-password/:token", resetPatientPassword);
 
-router.patch("/update-password", updatePatientPassword);
+router.patch("/update-password/:id", protectPatient, updatePatientPassword);
 
 module.exports = router;

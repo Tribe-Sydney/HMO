@@ -1,6 +1,4 @@
 const express = require("express");
-const { route } = require("..");
-const { updatePassword } = require("../controllers/auth-controller");
 const {
   doctorSignUp,
   doctorSignIn,
@@ -10,6 +8,7 @@ const {
   deleteDoctor,
   doctorForgotPassword,
   resetDoctorPassword,
+  updateDoctorPassword,
 } = require("../controllers/doctor-auth-controllers");
 
 const router = express.Router();
@@ -24,8 +23,8 @@ router.route("/:id").get(getDoctor).patch(updateDoctor).delete(deleteDoctor);
 
 router.post("/forgot-password", doctorForgotPassword);
 
-router.patch("reset-password", resetDoctorPassword);
+router.patch("/reset-password/:token", resetDoctorPassword);
 
-router.patch("/update-password", updatePassword);
+router.patch("/update-password", updateDoctorPassword);
 
 module.exports = router;

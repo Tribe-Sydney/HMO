@@ -1,6 +1,7 @@
 const express = require("express");
 const morgan = require("morgan");
 const fs = require("fs");
+const path = require("path");
 const doctorRoutes = require("./routes/doctor-routes");
 const patientRoutes = require("./routes/patient-routes");
 const ErrorHandler = require("./controllers/error-controllers");

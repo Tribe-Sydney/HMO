@@ -33,7 +33,15 @@ const doctor = {
 
 const doctorSchema = new mongoose.Schema(
   { ...User, ...doctor },
-  { toObject: { virtuals: true }, toJSON: { virtuals: true } }
+  {
+    timeStamps: true,
+    toObject: {
+      virtuals: true,
+    },
+    toJSON: {
+      virtuals: true,
+    },
+  }
 );
 
 doctorSchema.pre("save", async function (next) {

@@ -1,10 +1,7 @@
-const catchAsync = require("../utils/catchAsync");
-const ErrorObject = require("../utils/error");
 const QueryMethod = require("../utils/query");
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcryptjs");
 const crypto = require("crypto");
-const User = require("../models/User");
 const CatchAsync = require("../utils/catch-async");
 const ErrorObject = require("../utils/error");
 const sendEmail = require("../utils/email");
@@ -39,15 +36,25 @@ const createAndSendToken = CatchAsync(async (user, statusCode, res) => {
 
 exports.signUp = (Model) =>
   CatchAsync(async (req, res, next) => {
-    const { email, fullName, password, passwordConfirm, address, phoneNumber } =
-      req.body;
-    const user = await Model.create({
+    const {
       email,
-      fullName,
+      firstName,
       password,
       passwordConfirm,
       address,
-      phoneNumber,
+      location,
+      userName,
+      lastName,
+    } = req.body;
+    const user = await Model.create({
+      email,
+      firstName,
+      password,
+      passwordConfirm,
+      address,
+      location,
+      userName,
+      lastName,
     });
 
     createAndSendToken(user, 201, res);
@@ -69,7 +76,7 @@ exports.signIn = (Model) =>
   });
 
 exports.deleteOne = (Model) =>
-  catchAsync(async (req, res, next) => {
+  CatchAsync(async (req, res, next) => {
     const doc = await Model.findByIdAndDelete(req.params.id, {
       strict: true,
     });
@@ -84,7 +91,7 @@ exports.deleteOne = (Model) =>
   });
 
 exports.updateOne = (Model) =>
-  catchAsync(async (req, res, next) => {
+  CatchAsync(async (req, res, next) => {
     const updatedData = await Model.findByIdAndUpdate(req.params.id, req.body, {
       new: true,
       runValidators: true,
@@ -102,7 +109,7 @@ exports.updateOne = (Model) =>
   });
 
 exports.createOne = (Model) =>
-  catchAsync(async (req, res, next) => {
+  CatchAsync(async (req, res, next) => {
     const doc = await Model.create(req.body);
 
     res.status(201).json({
@@ -114,7 +121,7 @@ exports.createOne = (Model) =>
   });
 
 exports.getOne = (Model) =>
-  catchAsync(async (req, res, next) => {
+  CatchAsync(async (req, res, next) => {
     const doc = await Model.findById(req.params.id);
 
     if (!doc)
@@ -124,14 +131,12 @@ exports.getOne = (Model) =>
 
     res.status(200).json({
       status: "success",
-      data: {
-        data: doc,
-      },
+      data: doc,
     });
   });
 
 exports.getAll = (Model) =>
-  catchAsync(async (req, res) => {
+  CatchAsync(async (req, res) => {
     let filter = req.params.tourId ? { tourRef: req.params.tourId } : {};
     const features = new QueryMethod(Model.find(filter), req.query)
       .sort()
@@ -143,9 +148,8 @@ exports.getAll = (Model) =>
     res.status(200).json({
       status: "success",
       results: docs.length,
-      data: {
-        data: docs,
-      },
+
+      data: docs,
     });
   });
 
@@ -204,24 +208,24 @@ exports.forgotPassword = (Model) =>
 
     const message = `To reset your password click on the link below to submit your new password: ${resetUrl}`;
 
-    try {
-      await sendEmail({
-        message,
-        email: user.email,
-        subject: "Your password reset url. It's valid for 10mins",
-      });
+    // try {
+    //   await sendEmail({
+    //     message,
+    //     email: user.email,
+    //     subject: "Your password reset url. It's valid for 10mins",
+    //   });
 
-      res.status(200).json({
-        status: "success",
-        message: "Token has been sent to your mail",
-        resetUrl,
-      });
-    } catch (err) {
-      (user.passwordResetToken = undefined),
-        (user.passwordTokenExpires = undefined),
-        await user.save();
-      next(new ErrorObject("Error while sending the token to your mail", 500));
-    }
+    res.status(200).json({
+      status: "success",
+      message: "Token has been sent to your mail",
+      resetUrl,
+    });
+    // } catch (err) {
+    //   (user.passwordResetToken = undefined),
+    //     (user.passwordTokenExpires = undefined),
+    //     await user.save();
+    //   next(new ErrorObject("Error while sending the token to your mail", 500));
+    // }
   });
 
 exports.resetPassword = (Model) =>

@@ -1,4 +1,5 @@
 const { validate } = require("deep-email-validator");
+const validator = require("validator");
 
 const User = {
   firstName: {
@@ -23,14 +24,14 @@ const User = {
   email: {
     type: String,
     required: [true, "Email field is required for all users"],
-    // validate: [validator.isEmail, "Please enter a valid email"],
-    validate: {
-      validator: async function (val) {
-        const response = await validate(val);
-        return response.valid;
-      },
-      message: "Please enter a valid email",
-    },
+    validate: [validator.isEmail, "Please enter a valid email"],
+    // validate: {
+    //   validator: async function (val) {
+    //     const response = await validate(val);
+    //     return response.valid;
+    //   },
+    //   message: "Please enter a valid email",
+    // },
     trim: true,
     lowerCase: true,
     unique: [true, "A user with this email already exist"],
@@ -64,10 +65,14 @@ const User = {
     },
     select: false,
   },
-  timeStamp: true,
   passwordResetToken: String,
   passwordChangedAt: Date,
   passwordTokenExpires: Date,
+  createdAt: {
+    type: Date,
+    default: Date.now(),
+  },
+  updatedAt: Date,
 };
 
 module.exports = User;

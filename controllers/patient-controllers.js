@@ -6,6 +6,11 @@ const {
   getOne,
   updateOne,
   deleteOne,
+  protect,
+  restrictTo,
+  forgotPassword,
+  resetPassword,
+  updatePassword,
 } = require("./generic-controllers");
 
 exports.patientSignUp = signUp(Patient);
