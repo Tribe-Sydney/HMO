@@ -199,7 +199,7 @@ exports.forgotPassword = (Model) =>
     }
     // 2. Generate random reset token
     const resetToken = user.createPasswordResetToken();
-    user.save({ validateBeforeSave: false });
+    await user.save({ validateBeforeSave: false });
 
     // 3. Send token to the email addess
     const resetUrl = `${req.protocol}://${req.get(
@@ -208,24 +208,23 @@ exports.forgotPassword = (Model) =>
 
     const message = `To reset your password click on the link below to submit your new password: ${resetUrl}`;
 
-    // try {
-    //   await sendEmail({
-    //     message,
-    //     email: user.email,
-    //     subject: "Your password reset url. It's valid for 10mins",
-    //   });
+    try {
+      await sendEmail({
+        message,
+        email: user.email,
+        subject: "Your password reset url. It's valid for 10mins",
+      });
 
-    res.status(200).json({
-      status: "success",
-      message: "Token has been sent to your mail",
-      resetUrl,
-    });
-    // } catch (err) {
-    //   (user.passwordResetToken = undefined),
-    //     (user.passwordTokenExpires = undefined),
-    //     await user.save();
-    //   next(new ErrorObject("Error while sending the token to your mail", 500));
-    // }
+      res.status(200).json({
+        status: "success",
+        message: "Token has been sent to your mail",
+      });
+    } catch (err) {
+      user.passwordResetToken = undefined;
+      user.passwordTokenExpires = undefined;
+      await user.save();
+      next(new ErrorObject("Error while sending the token to your mail", 500));
+    }
   });
 
 exports.resetPassword = (Model) =>
