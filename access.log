@@ -55,3 +55,6 @@
 ::1 - - [19/Oct/2022:12:53:58 +0000] "POST /api/v1/doctors/forgot-password HTTP/1.1" 404 369 "-" "PostmanRuntime/7.29.2"
 ::1 - - [19/Oct/2022:13:01:42 +0000] "GET /api/v1/doctors HTTP/1.1" 200 42 "-" "PostmanRuntime/7.29.2"
 ::1 - - [19/Oct/2022:13:01:48 +0000] "POST /api/v1/doctors/signup HTTP/1.1" 201 534 "-" "PostmanRuntime/7.29.2"
+::1 - - [19/Oct/2022:13:02:34 +0000] "POST /api/v1/doctors/forgot-password HTTP/1.1" 200 193 "-" "PostmanRuntime/7.29.2"
+::1 - - [19/Oct/2022:13:04:14 +0000] "PATCH /api/v1/doctors/reset-password/20e53f1c3ed5425aaab2679ca5b0abe5cd768e3b8bc6568ae5e91923ec4920ec HTTP/1.1" 200 581 "-" "PostmanRuntime/7.29.2"
+::1 - - [19/Oct/2022:13:06:07 +0000] "PATCH /api/v1/doctors/update-password/634ff53c55d2265a7b80fce7 HTTP/1.1" 200 581 "-" "PostmanRuntime/7.29.2"
