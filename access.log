@@ -37,3 +37,4 @@
 ::1 - - [19/Oct/2022:12:05:00 +0000] "PATCH /api/v1/patients/update-password HTTP/1.1" 500 841 "-" "PostmanRuntime/7.29.2"
 ::1 - - [19/Oct/2022:12:05:48 +0000] "PATCH /api/v1/patients/update-password HTTP/1.1" 500 841 "-" "PostmanRuntime/7.29.2"
 ::1 - - [19/Oct/2022:12:07:01 +0000] "PATCH /api/v1/patients/update-password/634fd6caa44a54b5510d6e16 HTTP/1.1" 404 1329 "-" "PostmanRuntime/7.29.2"
+::1 - - [19/Oct/2022:12:07:54 +0000] "PATCH /api/v1/patients/update-password/634fd6caa44a54b5510d6e16 HTTP/1.1" 200 534 "-" "PostmanRuntime/7.29.2"
