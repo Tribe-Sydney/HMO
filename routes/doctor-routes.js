@@ -9,6 +9,7 @@ const {
   doctorForgotPassword,
   resetDoctorPassword,
   updateDoctorPassword,
+  protectDoctor,
 } = require("../controllers/doctor-auth-controllers");
 
 const router = express.Router();
@@ -25,6 +26,6 @@ router.post("/forgot-password", doctorForgotPassword);
 
 router.patch("/reset-password/:token", resetDoctorPassword);
 
-router.patch("/update-password", updateDoctorPassword);
+router.patch("/update-password/:id", protectDoctor, updateDoctorPassword);
 
 module.exports = router;
