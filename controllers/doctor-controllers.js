@@ -1,4 +1,3 @@
-const { findById, findByIdAndUpdate } = require("../models/doctor-model");
 const Doctor = require("../models/doctor-model");
 const catchAsync = require("../utils/catch-async");
 const ErrorObject = require("../utils/error");
