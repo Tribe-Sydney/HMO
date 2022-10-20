@@ -6,8 +6,7 @@ const User = require("../utils/user");
 const doctor = {
   role: {
     type: String,
-    enum: ["approved", "not-approved"],
-    default: "not-approved",
+    default: "doctor",
   },
   available: {
     type: Boolean,
@@ -31,12 +30,15 @@ const doctor = {
     type: Number,
     default: 0,
   },
+  verified: {
+    type: String,
+    default: false,
+  },
 };
 
 const doctorSchema = new mongoose.Schema(
   { ...User, ...doctor },
   {
-    timeStamps: true,
     toObject: {
       virtuals: true,
     },

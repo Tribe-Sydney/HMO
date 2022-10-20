@@ -16,11 +16,6 @@ const User = {
     minLength: [3, "A last-name must be at least 3 characters"],
     trim: true,
   },
-  userName: {
-    type: String,
-    required: [true, "Username field is required for all users"],
-    unique: [true, "A user with this username already exist"],
-  },
   email: {
     type: String,
     required: [true, "Email field is required for all users"],
