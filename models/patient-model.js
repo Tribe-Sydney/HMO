@@ -23,6 +23,9 @@ const patient = {
     enum: ["none", "basic", "standard", "premium"],
     default: "none",
   },
+  planExpires: {
+    type: Date,
+  },
   profileCompleted: {
     type: Boolean,
     default: true,

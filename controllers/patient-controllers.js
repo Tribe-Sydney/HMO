@@ -1,5 +1,6 @@
 const Patient = require("../models/patient-model");
 const catchAsync = require("../utils/catch-async");
+const sendEmail = require("../utils/email");
 const ErrorObject = require("../utils/error");
 const chargeCard = require("../utils/payment");
 const {
@@ -53,9 +54,29 @@ exports.planSubscribtion = catchAsync(async (req, res, next) => {
   }
   const user = await Patient.findById(req.user.id);
   user.plan = req.body.plan;
+  user.planExpires = new Date(Date.now() + 30 * 60 * 60 * 24 * 1000);
   await user.save();
-  res.status(200).json({
-    status: "success",
-    payment,
-  });
+  const date = `${user.planExpires.getFullYear()}/${
+    user.planExpires.getMonth() + 1
+  }/${user.planExpires.getDate()}`;
+  const time = `${user.planExpires.getHours()}:${user.planExpires.getMinutes()}`;
+  const message = `You have successfully subscribe for the ${user.plan} plan for a 
+  fee of ${req.body.amount}. Your plan would be expiring on ${date} at ${time}
+  `;
+  try {
+    await sendEmail({
+      email: user.email,
+      subject: `You have successfully subscribe for the ${user.plan} plan`,
+      message,
+    });
+    res.status(200).json({
+      status: "success",
+      payment,
+      message: "message has been sent to your mail",
+    });
+  } catch (error) {
+    res.status(400).json({
+      message: "error sending your message to the mail",
+    });
+  }
 });
