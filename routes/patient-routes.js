@@ -10,6 +10,7 @@ const {
   resetPatientPassword,
   updatePatientPassword,
   protectPatient,
+  planSubscribtion,
 } = require("../controllers/patient-controllers");
 
 const router = express.Router();
@@ -27,5 +28,7 @@ router.post("/forgot-password", patientForgotPassword);
 router.patch("/reset-password/:token", resetPatientPassword);
 
 router.patch("/update-password/:id", protectPatient, updatePatientPassword);
+
+router.post("/subscribe", protectPatient, planSubscribtion);
 
 module.exports = router;

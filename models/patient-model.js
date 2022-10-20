@@ -23,10 +23,17 @@ const patient = {
     enum: ["none", "basic", "standard", "premium"],
     default: "none",
   },
+  profileCompleted: {
+    type: Boolean,
+    default: true,
+  },
 };
 
 const patientSchema = new mongoose.Schema(
-  { ...User, ...patient },
+  {
+    ...User,
+    ...patient,
+  },
   {
     timeStamps: true,
     toObject: {
