@@ -69,3 +69,4 @@
 ::1 - - [20/Oct/2022:10:34:42 +0000] "GET /api/v1/doctors HTTP/1.1" 200 413 "-" "PostmanRuntime/7.29.2"
 ::1 - - [20/Oct/2022:10:37:14 +0000] "PATCH /api/v1/doctors/verify-doctor HTTP/1.1" 500 828 "-" "PostmanRuntime/7.29.2"
 ::1 - - [20/Oct/2022:10:42:19 +0000] "PATCH /api/v1/doctors/verify-doctor HTTP/1.1" 500 828 "-" "PostmanRuntime/7.29.2"
+::1 - - [20/Oct/2022:10:47:27 +0000] "PATCH /api/v1/doctors/verify-doctor/634ff53c55d2265a7b80fce7 HTTP/1.1" 200 408 "-" "PostmanRuntime/7.29.2"
