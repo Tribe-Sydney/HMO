@@ -42,10 +42,8 @@ exports.verifyDoctor = catchAsync(async (req, res, next) => {
     return next(new ErrorObject("Doctor with the requested ID not found", 400));
   }
 
-  // const updatedDoctor = await Doctor.findByIdAndUpdate(req.body.id, {verified: true}, {
-  //   new: true
-  // })
   doctor.verified = true;
+
   await doctor.save();
   res.status(200).json({
     status: "success",
