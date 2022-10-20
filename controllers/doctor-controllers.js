@@ -1,4 +1,7 @@
+const { findById, findByIdAndUpdate } = require("../models/doctor-model");
 const Doctor = require("../models/doctor-model");
+const catchAsync = require("../utils/catch-async");
+const ErrorObject = require("../utils/error");
 const {
   signUp,
   getAll,
@@ -6,11 +9,10 @@ const {
   deleteOne,
   updateOne,
   signIn,
-  protect,
-  restrictTo,
   forgotPassword,
   resetPassword,
   updatePassword,
+  protect,
 } = require("./generic-controllers");
 
 exports.doctorSignUp = signUp(Doctor);
@@ -25,12 +27,28 @@ exports.updateDoctor = updateOne(Doctor);
 
 exports.doctorSignIn = signIn(Doctor);
 
-exports.protectDoctor = protect(Doctor);
-
-exports.restrictDoctor = restrictTo(Doctor);
-
 exports.doctorForgotPassword = forgotPassword(Doctor);
 
 exports.resetDoctorPassword = resetPassword(Doctor);
 
 exports.updateDoctorPassword = updatePassword(Doctor);
+
+exports.protectDoctor = protect(Doctor);
+
+exports.verifyDoctor = catchAsync(async (req, res, next) => {
+  const doctor = await Doctor.findById(req.params.id);
+  console.log(doctor);
+  if (!doctor) {
+    return next(new ErrorObject("Doctor with the requested ID not found", 400));
+  }
+
+  // const updatedDoctor = await Doctor.findByIdAndUpdate(req.body.id, {verified: true}, {
+  //   new: true
+  // })
+  doctor.verified = true;
+  await doctor.save();
+  res.status(200).json({
+    status: "success",
+    doctor,
+  });
+});

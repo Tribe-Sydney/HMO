@@ -31,7 +31,7 @@ const doctor = {
     default: 0,
   },
   verified: {
-    type: String,
+    type: Boolean,
     default: false,
   },
 };

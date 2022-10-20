@@ -6,11 +6,10 @@ const {
   getOne,
   updateOne,
   deleteOne,
-  protect,
-  restrictTo,
   forgotPassword,
   resetPassword,
   updatePassword,
+  protect,
 } = require("./generic-controllers");
 
 exports.adminSignUp = signUp(Admin);
@@ -25,12 +24,10 @@ exports.updateAdmin = updateOne(Admin);
 
 exports.deleteAdmin = deleteOne(Admin);
 
-exports.protectAdmin = protect(Admin);
-
-exports.restrictAdmin = restrictTo(Admin);
-
 exports.adminForgotPassword = forgotPassword(Admin);
 
 exports.resetAdminPassword = resetPassword(Admin);
 
 exports.updateAdminPassword = updatePassword(Admin);
+
+exports.protectAdmin = protect(Admin);
