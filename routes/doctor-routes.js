@@ -10,7 +10,7 @@ const {
   resetDoctorPassword,
   updateDoctorPassword,
   protectDoctor,
-} = require("../controllers/doctor-auth-controllers");
+} = require("../controllers/doctor-controllers");
 
 const router = express.Router();
 

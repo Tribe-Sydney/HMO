@@ -1,32 +1,16 @@
 const { default: mongoose } = require("mongoose");
-const bcrypt = require("bcryptjs");
 const crypto = require("crypto");
+const bcrypt = require("bcryptjs");
 const User = require("../utils/user");
 
-const patient = {
-  location: {
-    type: String,
-    required: true,
+const adminSchema = new mongoose.Schema(
+  {
+    ...User,
+    role: {
+      type: String,
+      default: "admin",
+    },
   },
-  occupation: {
-    type: String,
-  },
-  description: {
-    type: String,
-  },
-  role: {
-    type: String,
-    default: "patient",
-  },
-  plan: {
-    type: String,
-    enum: ["none", "basic", "standard", "premium"],
-    default: "none",
-  },
-};
-
-const patientSchema = new mongoose.Schema(
-  { ...User, ...patient },
   {
     timeStamps: true,
     toObject: {
@@ -38,16 +22,17 @@ const patientSchema = new mongoose.Schema(
   }
 );
 
-patientSchema.pre("save", async function (next) {
-  if (!this.isModified("password")) return next();
-
+adminSchema.pre("save", async function (next) {
+  if (!this.isModified("password")) {
+    return next();
+  }
   let salt = await bcrypt.genSalt(10);
   this.password = await bcrypt.hash(this.password, salt);
   this.passwordConfirm = undefined;
   next();
 });
 
-patientSchema.methods.createPasswordResetToken = function () {
+adminSchema.methods.createPasswordResetToken = function () {
   const resetToken = crypto.randomBytes(32).toString("hex");
 
   this.passwordResetToken = crypto
@@ -58,7 +43,7 @@ patientSchema.methods.createPasswordResetToken = function () {
   return resetToken;
 };
 
-patientSchema.methods.changePasswordAfter = function (JWTTimestamp) {
+adminSchema.methods.changePasswordAfter = function (JWTTimestamp) {
   if (this.passwordChangedAt) {
     console.log(JWTTimestamp < this.passwordChangedAt);
     return JWTTimestamp < this.passwordChangedAt;
@@ -66,6 +51,6 @@ patientSchema.methods.changePasswordAfter = function (JWTTimestamp) {
   return false;
 };
 
-const Patient = mongoose.model("Patient", patientSchema);
+const Admin = mongoose.model("Admin", adminSchema);
 
-module.exports = Patient;
+module.exports = Admin;
