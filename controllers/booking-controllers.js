@@ -2,6 +2,7 @@ const Booking = require("../models/booking-model");
 const Doctor = require("../models/doctor-model");
 const Patient = require("../models/patient-model");
 const catchAsync = require("../utils/catch-async");
+const ErrorObject = require("../utils/error");
 const { getAll, getOne, updateOne } = require("./generic-controllers");
 
 exports.getAllBooking = getAll(Booking);
@@ -46,4 +47,23 @@ exports.createBooking = catchAsync(async (req, res, next) => {
       message: "error sending your message to the mail",
     });
   }
+});
+
+exports.isBookingCompleted = catchAsync(async (req, res, next) => {
+  const booking = await Booking.findById(req.params.id);
+  if (booking.patientId !== req.user.id) {
+    return next(
+      new ErrorObject("You are not authorised to perform this action", 400)
+    );
+  }
+  if (Date.now() < booking.meetingTime) {
+    return next(new ErrorObject("The meeting is not yet over", 400));
+  }
+  booking.meetingCompleted = true;
+  booking.save();
+  res.status(200).json({
+    status: "success",
+    message: "meeting completed",
+    booking,
+  });
 });
