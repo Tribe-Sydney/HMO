@@ -80,3 +80,35 @@ exports.planSubscribtion = catchAsync(async (req, res, next) => {
     });
   }
 });
+
+exports.isProfileCompleted = catchAsync(async (req, res, next) => {
+  const patient = req.user;
+  if (!patient.sex || !patient.age || !patient.occupation) {
+    return next(new ErrorObject("Please kindly complete your profile", 400));
+  }
+  if (patient.profileCompleted !== true) {
+    const user = await Patient.findById(patient.id);
+    user.profileCompleted = true;
+    await user.save();
+  }
+  next();
+});
+
+exports.isPlanStillOn = catchAsync(async (req, res, next) => {
+  if (req.user.plan === "none") {
+    return next(new ErrorObject("Please subscribe for a plan", 400));
+  }
+  const hasExpired = Date.now() > req.user.planExpires;
+  if (hasExpired) {
+    const user = await Patient.findById(req.user.id);
+    (user.plan = "none"), (user.planExpires = undefined);
+    user.save();
+    return next(
+      new ErrorObject(
+        "Please subscribe for a new plan, your previous plan has expired",
+        400
+      )
+    );
+  }
+  next();
+});

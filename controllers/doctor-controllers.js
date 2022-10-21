@@ -34,9 +34,13 @@ exports.updateDoctorPassword = updatePassword(Doctor);
 
 exports.protectDoctor = protect(Doctor);
 
+exports.completedProfile = catchAsync(async (req, res, next) => {
+  // Upload required information and document
+  // Send Mail to the admin with a url that gets the particular doctor
+});
+
 exports.verifyDoctor = catchAsync(async (req, res, next) => {
   const doctor = await Doctor.findById(req.params.id);
-  console.log(doctor);
   if (!doctor) {
     return next(new ErrorObject("Doctor with the requested ID not found", 400));
   }

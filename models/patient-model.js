@@ -28,7 +28,12 @@ const patient = {
   },
   profileCompleted: {
     type: Boolean,
-    default: true,
+    default: false,
+  },
+  age: Number,
+  sex: {
+    type: String,
+    enum: ["male", "female"],
   },
 };
 

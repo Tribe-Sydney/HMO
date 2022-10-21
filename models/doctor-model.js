@@ -19,8 +19,11 @@ const doctor = {
     type: Number,
     default: null,
   },
-  certification: {
+  certificate: {
     type: String,
+  },
+  yearsOfExperience: {
+    type: Number,
   },
   accessable: {
     type: String,
