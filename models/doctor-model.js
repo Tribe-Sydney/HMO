@@ -26,8 +26,7 @@ const doctor = {
     type: Number,
   },
   accessable: {
-    type: String,
-    enum: ["basic", "standard", "premium"],
+    type: [String],
   },
   attendedTo: {
     type: Number,

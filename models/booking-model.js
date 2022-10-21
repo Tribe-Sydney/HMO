@@ -16,7 +16,10 @@ const bookingSchema = new mongoose.Schema({
     required: true,
   },
   createdAt: Date.now(),
-  meetingCompleted: Boolean,
+  meetingCompleted: {
+    type: Boolean,
+    default: false,
+  },
 });
 
 const Booking = mongoose.model("Booking", bookingSchema);
