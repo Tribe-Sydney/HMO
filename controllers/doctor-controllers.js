@@ -34,9 +34,87 @@ exports.updateDoctorPassword = updatePassword(Doctor);
 
 exports.protectDoctor = protect(Doctor);
 
-exports.completedProfile = catchAsync(async (req, res, next) => {
+const multerStorage = multer.memoryStorage();
+
+const multerFilter = (req, file, cb) => {
+  if (file.mimetype.startsWith("image")) {
+    cb(null, true);
+  } else {
+    return "Please upload only an image file";
+  }
+};
+
+const uploadCertificate = multer({
+  storage: multerStorage,
+  fileFilter: multerFilter,
+});
+
+exports.uploadDoctorsCertificate = uploadCertificate.single("certificate");
+
+exports.certFormatter = catchAsync(async (req, res, next) => {
+  if (req.file) {
+    let timeStamp = Date.now();
+    let id = req.params.id;
+    let certificate;
+    const doctor = await Doctor.findById(id);
+    if (!doctor) {
+      return next(
+        new ErrorObject(`There is no doctor with the ${req.params.id}`, 400)
+      );
+    }
+    certificate = `${doctor.lastName}-${timeStamp}.jpeg`;
+
+    req.body.certificate = certificate;
+
+    await sharp(req.file.buffer)
+      .resize(320, 240)
+      .toFormat("jpeg")
+      .jpeg({ quality: 80 })
+      .toFile(`public/doctor/certificate/${certificate}`);
+  }
+  next();
+});
+
+exports.completeProfile = catchAsync(async (req, res, next) => {
   // Upload required information and document
+  const doctor = await Doctor.findById(req.params.id);
+  if (!doctor) {
+    return next(new ErrorObject("Doctor with the requested ID not found", 400));
+  }
+
+  const certificate =
+    req.body.certificate === undefined
+      ? doctor.certificate
+      : req.body.certificate;
+  const yearsOfExperience =
+    req.body.yearsOfExperience === undefined
+      ? doctor.yearsOfExperience
+      : req.body.yearsOfExperience;
+
+  const update = { certificate, yearsOfExperience };
+  const updatedProfile = await Doctor.findByIdAndUpdate(req.params.id, update);
+
   // Send Mail to the admin with a url that gets the particular doctor
+
+  try {
+    await sendEmail({
+      email: ADMIN_EMAIL,
+      subject: "Certificate Upload Notification",
+      message:
+        `Certificate Uploaded from ${doctor.firstName} ${doctor.lastName} \n Email : ${doctor.email}` +
+        "\n" +
+        updatedProfile,
+    });
+    res.status(200).json({
+      status: "success",
+      updatedProfile,
+      message: "message has been sent to your mail",
+    });
+  } catch (error) {
+    res.status(400).json({
+      message: "error sending your message to the mail",
+    });
+  }
 });
 
 exports.verifyDoctor = catchAsync(async (req, res, next) => {

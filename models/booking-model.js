@@ -15,7 +15,10 @@ const bookingSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
-  createdAt: Date.now(),
+  createdAt: {
+    type: Date,
+    default: Date.now(),
+  },
   meetingCompleted: {
     type: Boolean,
     default: false,

@@ -60,7 +60,7 @@ exports.planSubscribtion = catchAsync(async (req, res, next) => {
     user.planExpires.getMonth() + 1
   }/${user.planExpires.getDate()}`;
   const time = `${user.planExpires.getHours()}:${user.planExpires.getMinutes()}`;
-  const message = `You have successfully subscribe for the ${user.plan} plan for a 
+  const message = `You have successfully subscribe for the ${user.plan} plan for a
   fee of ${req.body.amount}. Your plan would be expiring on ${date} at ${time}
   `;
   try {

@@ -25,7 +25,10 @@ const reviewSchema = new mongoose.Schema({
     min: [1, "ratings can't be lower than 1"],
     max: [5, "ratings can't be higher than 5"],
   },
-  createdAt: Date.now(),
+  createdAt: {
+    type: Date,
+    default: Date.now(),
+  },
   updatedAt: Date,
 });
 

@@ -1,4 +1,5 @@
 const express = require("express");
+const { protectPatient } = require("../controllers/patient-controllers");
 const {
   getAllReview,
   createReview,
