@@ -265,19 +265,3 @@ exports.updatePassword = (Model) =>
 
     createAndSendToken(user, 200, res);
   });
-
-
-  //Get Booking History
-  // exports.getAllProduct = CatchAsync(async (req, res, next) => {
-  //   let queriedProducts = new QueryMethod(Product.find(), req.query)
-  //     .sort()
-  //     .filter()
-  //     .limit()
-  //     .paginate();
-  //   let products = await queriedProducts.query;
-  //   res.status(200).json({
-  //     status: "success",
-  //     results: products.length,
-  //     data: { products },
-  //   });
-  // });

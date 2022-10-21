@@ -6,6 +6,7 @@ const doctorRoutes = require("./routes/doctor-routes");
 const patientRoutes = require("./routes/patient-routes");
 const adminRoutes = require("./routes/admin-routes");
 const bookingRouter = require("./routes/booking-routes");
+const reviewRouter = require("./routes/review-routes");
 const ErrorHandler = require("./controllers/error-controllers");
 const ErrorObject = require("./utils/error");
 const { PORT } = process.env;
@@ -30,6 +31,7 @@ app.use("/api/v1/doctors", doctorRoutes);
 app.use("/api/v1/patients", patientRoutes);
 app.use("/api/v1/admins", adminRoutes);
 app.use("/api/v1/bookings", bookingRouter);
+app.use("/api/v1/reviews", reviewRouter);
 app.all("*", (req, res, next) => {
   const err = new ErrorObject(
     `http://localhost:${PORT}${req.url} not found`,

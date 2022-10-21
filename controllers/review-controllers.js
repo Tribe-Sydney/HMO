@@ -28,3 +28,23 @@ exports.createReview = catchAsync(async (req, res, next) => {
     review,
   });
 });
+
+exports.updateReview = catchAsync(async (req, res, next) => {
+  const review = await Review.findById(req.params.id);
+  if (req.user.id !== review.patientId) {
+    return next(new ErrorObject("You are not authorised to perform this", 403));
+  }
+  const update = { ...req.body, updatedAt: Date.now() };
+  const updatedReview = await Model.findByIdAndUpdate(req.params.id, update, {
+    new: true,
+    runValidators: true,
+  });
+  if (!updatedReview)
+    return next(
+      new ErrorObject(`Document with the id ${req.params.id} not found`, 404)
+    );
+  res.status(200).json({
+    status: "success",
+    updatedReview,
+  });
+});

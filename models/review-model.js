@@ -20,8 +20,13 @@ const reviewSchema = new mongoose.Schema({
     type: String,
     required: [true, "A message is required"],
   },
-  ratings: Number,
+  ratings: {
+    type: Number,
+    min: [1, "ratings can't be lower than 1"],
+    max: [5, "ratings can't be higher than 5"],
+  },
   createdAt: Date.now(),
+  updatedAt: Date,
 });
 
 const Review = mongoose.model("Review", reviewSchema);
