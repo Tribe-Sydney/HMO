@@ -14,6 +14,7 @@ const {
   resetPassword,
   updatePassword,
   protect,
+  samePerson,
 } = require("./generic-controllers");
 
 exports.patientSignUp = signUp(Patient);
@@ -35,6 +36,8 @@ exports.resetPatientPassword = resetPassword(Patient);
 exports.updatePatientPassword = updatePassword(Patient);
 
 exports.protectPatient = protect(Patient);
+
+exports.samePatient = samePerson(Patient);
 
 exports.planSubscribtion = catchAsync(async (req, res, next) => {
   if (!req.user.profileCompleted) {
@@ -86,11 +89,11 @@ exports.isProfileCompleted = catchAsync(async (req, res, next) => {
   if (!patient.sex || !patient.age || !patient.occupation) {
     return next(new ErrorObject("Please kindly complete your profile", 400));
   }
-  if (patient.profileCompleted !== true) {
-    const user = await Patient.findById(patient.id);
-    user.profileCompleted = true;
-    await user.save();
-  }
+  const user = await Patient.findById(patient.id);
+  user.profileCompleted = true;
+  await user.save();
+  req.user = user;
+
   next();
 });
 
