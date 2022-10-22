@@ -1,5 +1,8 @@
+const multer = require("multer");
+const sharp = require("sharp");
 const Doctor = require("../models/doctor-model");
 const catchAsync = require("../utils/catch-async");
+const sendEmail = require("../utils/email");
 const ErrorObject = require("../utils/error");
 const {
   signUp,
@@ -12,7 +15,10 @@ const {
   resetPassword,
   updatePassword,
   protect,
+  samePerson,
 } = require("./generic-controllers");
+
+const { ADMIN_EMAIL } = process.env;
 
 exports.doctorSignUp = signUp(Doctor);
 
@@ -33,6 +39,8 @@ exports.resetDoctorPassword = resetPassword(Doctor);
 exports.updateDoctorPassword = updatePassword(Doctor);
 
 exports.protectDoctor = protect(Doctor);
+
+exports.sameDoctor = samePerson(Doctor);
 
 const multerStorage = multer.memoryStorage();
 
@@ -55,14 +63,13 @@ exports.certFormatter = catchAsync(async (req, res, next) => {
   if (req.file) {
     let timeStamp = Date.now();
     let id = req.params.id;
-    let certificate;
     const doctor = await Doctor.findById(id);
     if (!doctor) {
       return next(
         new ErrorObject(`There is no doctor with the ${req.params.id}`, 400)
       );
     }
-    certificate = `${doctor.lastName}-${timeStamp}.jpeg`;
+    let certificate = `${doctor.lastName}-${timeStamp}.jpeg`;
 
     req.body.certificate = certificate;
 
@@ -70,7 +77,7 @@ exports.certFormatter = catchAsync(async (req, res, next) => {
       .resize(320, 240)
       .toFormat("jpeg")
       .jpeg({ quality: 80 })
-      .toFile(`public/doctor/certificate/${certificate}`);
+      .toFile(`public/doctor/certificates/${certificate}`);
   }
   next();
 });
@@ -90,9 +97,15 @@ exports.completeProfile = catchAsync(async (req, res, next) => {
     req.body.yearsOfExperience === undefined
       ? doctor.yearsOfExperience
       : req.body.yearsOfExperience;
+  const setAvailableTime =
+    req.body.setAvailableTime === undefined
+      ? doctor.setAvailableTime
+      : req.body.setAvailableTime;
 
-  const update = { certificate, yearsOfExperience };
-  const updatedProfile = await Doctor.findByIdAndUpdate(req.params.id, update);
+  const update = { certificate, yearsOfExperience, setAvailableTime };
+  const updatedProfile = await Doctor.findByIdAndUpdate(req.params.id, update, {
+    new: true,
+  });
 
   // Send Mail to the admin with a url that gets the particular doctor
 
@@ -123,6 +136,7 @@ exports.verifyDoctor = catchAsync(async (req, res, next) => {
     return next(new ErrorObject("Doctor with the requested ID not found", 400));
   }
 
+  doctor.accessable = req.body.accessable;
   doctor.verified = true;
 
   await doctor.save();

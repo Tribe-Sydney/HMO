@@ -90,8 +90,21 @@ exports.deleteOne = (Model) =>
     });
   });
 
+exports.samePerson = (Model) =>
+  CatchAsync(async (req, res, next) => {
+    if (req.user.id !== req.params.id) {
+      return next(
+        new ErrorObject(`You're not authorised to perform this action`, 403)
+      );
+    }
+    next();
+  });
+
 exports.updateOne = (Model) =>
   CatchAsync(async (req, res, next) => {
+    if (req.body.password) {
+      return next(new ErrorObject("You can't update password here", 400));
+    }
     const updatedData = await Model.findByIdAndUpdate(req.params.id, req.body, {
       new: true,
       runValidators: true,
@@ -171,6 +184,10 @@ exports.protect = (Model) =>
     const decodedToken = await jwt.verify(token, JWT_SECRET);
 
     const currentUser = await Model.findById(decodedToken.id);
+
+    if (!currentUser) {
+      return next(new ErrorObject("You are not authorized", 401));
+    }
 
     req.user = currentUser;
     next();

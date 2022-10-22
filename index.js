@@ -23,6 +23,9 @@ const accessLogStream = fs.createWriteStream(
 // body parser
 app.use(express.json());
 
+// Using Static files
+app.use(express.static(`${__dirname}/public`));
+
 // setup the logger
 app.use(morgan("combined", { stream: accessLogStream }));
 
