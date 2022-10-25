@@ -2,6 +2,7 @@ const Booking = require("../models/booking-model");
 const Doctor = require("../models/doctor-model");
 const Patient = require("../models/patient-model");
 const catchAsync = require("../utils/catch-async");
+const sendEmail = require("../utils/email");
 const ErrorObject = require("../utils/error");
 const { getAll, getOne, updateOne } = require("./generic-controllers");
 
@@ -12,7 +13,8 @@ exports.getBooking = getOne(Booking);
 exports.updateBooking = updateOne(Booking);
 
 exports.createBooking = catchAsync(async (req, res, next) => {
-  const { meetingTime, patientId, doctorId } = req.body;
+  const { meetingTime, doctorId } = req.body;
+  const patientId = req.user.id;
   const doctor = await Doctor.findOne({ _id: doctorId });
 
   if (!doctor.accessable.includes(req.user.plan)) {

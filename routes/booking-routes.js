@@ -1,4 +1,5 @@
 const express = require("express");
+const { protectAdmin } = require("../controllers/admin-controllers");
 const {
   getAllBooking,
   createBooking,
@@ -9,7 +10,10 @@ const { protectPatient } = require("../controllers/patient-controllers");
 
 const router = express.Router();
 
-router.route("/").get(getAllBooking).post(protectPatient, createBooking);
+router
+  .route("/")
+  .get(protectAdmin, getAllBooking)
+  .post(protectPatient, createBooking);
 router.route("/:id").get(getBooking).patch(protectPatient, isBookingCompleted);
 
 module.exports = router;
