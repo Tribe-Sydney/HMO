@@ -224,3 +224,4 @@
 ::1 - - [25/Oct/2022:15:10:37 +0000] "GET /api/v1/records HTTP/1.1" 403 318 "-" "PostmanRuntime/7.29.2"
 ::1 - - [25/Oct/2022:15:15:49 +0000] "POST /api/v1/admins/signin HTTP/1.1" 200 506 "-" "PostmanRuntime/7.29.2"
 ::1 - - [25/Oct/2022:15:15:59 +0000] "GET /api/v1/records HTTP/1.1" 200 335 "-" "PostmanRuntime/7.29.2"
+::1 - - [25/Oct/2022:15:28:41 +0000] "GET /api/v1/records/6357fb8bb605eefaaa1cbb5a HTTP/1.1" 200 329 "-" "PostmanRuntime/7.29.2"
