@@ -6,7 +6,10 @@ const {
   getBooking,
   isBookingCompleted,
 } = require("../controllers/booking-controllers");
-const { protectPatient } = require("../controllers/patient-controllers");
+const {
+  protectPatient,
+  samePatient,
+} = require("../controllers/patient-controllers");
 
 const router = express.Router();
 

@@ -53,9 +53,9 @@ exports.createBooking = catchAsync(async (req, res, next) => {
 
 exports.isBookingCompleted = catchAsync(async (req, res, next) => {
   const booking = await Booking.findById(req.params.id);
-  if (booking.patientId !== req.user.id) {
+  if (booking.patientId.toString() !== req.user.id) {
     return next(
-      new ErrorObject("You are not authorised to perform this action", 400)
+      new ErrorObject("You are not authorised to perform this action", 403)
     );
   }
   if (Date.now() < booking.meetingTime) {

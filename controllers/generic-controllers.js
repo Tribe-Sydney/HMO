@@ -186,7 +186,7 @@ exports.protect = (Model) =>
     const currentUser = await Model.findById(decodedToken.id);
 
     if (!currentUser) {
-      return next(new ErrorObject("You are not authorized", 401));
+      return next(new ErrorObject("You are not authorized", 403));
     }
 
     req.user = currentUser;

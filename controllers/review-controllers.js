@@ -31,11 +31,11 @@ exports.createReview = catchAsync(async (req, res, next) => {
 
 exports.updateReview = catchAsync(async (req, res, next) => {
   const review = await Review.findById(req.params.id);
-  if (req.user.id !== review.patientId) {
+  if (req.user.id !== review.patientId.toString()) {
     return next(new ErrorObject("You are not authorised to perform this", 403));
   }
   const update = { ...req.body, updatedAt: Date.now() };
-  const updatedReview = await Model.findByIdAndUpdate(req.params.id, update, {
+  const updatedReview = await Review.findByIdAndUpdate(req.params.id, update, {
     new: true,
     runValidators: true,
   });
