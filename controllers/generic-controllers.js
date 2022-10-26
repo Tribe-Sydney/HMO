@@ -281,8 +281,4 @@ exports.updatePassword = (Model) =>
     await user.save();
 
     createAndSendToken(user, 200, res);
-<<<<<<< HEAD
   });
-=======
-  });
->>>>>>> 3fe926bffdd6e9ecb1b4d47ab6e3fd1c8b981985
