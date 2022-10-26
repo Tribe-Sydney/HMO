@@ -23,10 +23,25 @@ const patient = {
     enum: ["none", "basic", "standard", "premium"],
     default: "none",
   },
+  planExpires: {
+    type: Date,
+  },
+  profileCompleted: {
+    type: Boolean,
+    default: false,
+  },
+  age: Number,
+  sex: {
+    type: String,
+    enum: ["male", "female"],
+  },
 };
 
 const patientSchema = new mongoose.Schema(
-  { ...User, ...patient },
+  {
+    ...User,
+    ...patient,
+  },
   {
     timeStamps: true,
     toObject: {

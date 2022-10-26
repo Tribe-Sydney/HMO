@@ -1,7 +1,12 @@
 const mongoose = require("mongoose");
 
-const bookingSchema = new mongoose.Schema(
+const recordSchema = new mongoose.Schema(
   {
+    bookingId: {
+      type: mongoose.Schema.ObjectId,
+      ref: "Booking",
+      required: [true, "A booking Id is required"],
+    },
     doctorId: {
       type: mongoose.Schema.ObjectId,
       ref: "Doctor",
@@ -12,18 +17,18 @@ const bookingSchema = new mongoose.Schema(
       ref: "Patient",
       required: [true, "A patient Id is required"],
     },
-    meetingTime: {
+    comment: {
       type: String,
-      required: true,
+      required: [true, "A comment is required"],
+    },
+    prescription: {
+      type: String,
     },
     createdAt: {
       type: Date,
       default: Date.now(),
     },
-    meetingCompleted: {
-      type: Boolean,
-      default: false,
-    },
+    updatedAt: Date,
   },
   {
     toObject: {
@@ -35,6 +40,6 @@ const bookingSchema = new mongoose.Schema(
   }
 );
 
-const Booking = mongoose.model("Booking", bookingSchema);
+const Record = mongoose.model("Record", recordSchema);
 
-module.exports = Booking;
+module.exports = Record;

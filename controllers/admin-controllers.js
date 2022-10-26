@@ -10,6 +10,7 @@ const {
   resetPassword,
   updatePassword,
   protect,
+  samePerson,
 } = require("./generic-controllers");
 
 exports.adminSignUp = signUp(Admin);
@@ -31,3 +32,5 @@ exports.resetAdminPassword = resetPassword(Admin);
 exports.updateAdminPassword = updatePassword(Admin);
 
 exports.protectAdmin = protect(Admin);
+
+exports.sameAdmin = samePerson(Admin);

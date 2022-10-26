@@ -1,7 +1,12 @@
 const mongoose = require("mongoose");
 
-const bookingSchema = new mongoose.Schema(
+const reviewSchema = new mongoose.Schema(
   {
+    bookingId: {
+      type: mongoose.Schema.ObjectId,
+      ref: "Booking",
+      required: [true, "A booking Id is required"],
+    },
     doctorId: {
       type: mongoose.Schema.ObjectId,
       ref: "Doctor",
@@ -12,18 +17,20 @@ const bookingSchema = new mongoose.Schema(
       ref: "Patient",
       required: [true, "A patient Id is required"],
     },
-    meetingTime: {
+    message: {
       type: String,
-      required: true,
+      required: [true, "A message is required"],
+    },
+    ratings: {
+      type: Number,
+      min: [1, "ratings can't be lower than 1"],
+      max: [5, "ratings can't be higher than 5"],
     },
     createdAt: {
       type: Date,
       default: Date.now(),
     },
-    meetingCompleted: {
-      type: Boolean,
-      default: false,
-    },
+    updatedAt: Date,
   },
   {
     toObject: {
@@ -35,6 +42,6 @@ const bookingSchema = new mongoose.Schema(
   }
 );
 
-const Booking = mongoose.model("Booking", bookingSchema);
+const Review = mongoose.model("Review", reviewSchema);
 
-module.exports = Booking;
+module.exports = Review;
