@@ -41,7 +41,6 @@ const chargeCard = async (req, user) => {
     }
     return response;
   } catch (error) {
-    console.log(error);
     return error;
   }
 };
